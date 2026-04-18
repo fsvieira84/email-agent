@@ -115,12 +115,24 @@ class EmailAgent:
         urgent_keywords = ["urgente", "important", "urgent", "!!", "ASAP"]
         return "high" if any(kw.lower() in subject.lower() for kw in urgent_keywords) else "normal"
     
+    def filter_by_sender(self, emails: List[Dict], sender: str) -> List[Dict]:
+        """Filtra e-mails por remetente"""
+        return [e for e in emails if sender.lower() in e["from"].lower()]
+
     def disconnect(self) -> None:
         """Desconecta do servidor"""
         if self.mail:
             self.mail.close()
             self.mail.logout()
             print("✓ Desconectado")
+
+    def notify_high_priority(self, emails: List[Dict]) -> None:
+        """Notifica sobre e-mails de alta prioridade"""
+        high_priority = [e for e in emails if e["priority"] == "high"]
+        if high_priority:
+            print(f"\n🔴 ALERTA: {len(high_priority)} e-mail(s) de ALTA PRIORIDADE!")
+            for email in high_priority:
+                print(f"  - {email['subject']}")
 
 
 # Script de demonstração

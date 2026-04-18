@@ -134,6 +134,13 @@ class EmailAgent:
             for email in high_priority:
                 print(f"  - {email['subject']}")
 
+    def search_emails(self, emails: List[Dict], keyword: str) -> List[Dict]:
+        """Busca e-mails por palavra-chave"""
+        results = []
+        for email in emails:
+            if keyword.lower() in email["subject"].lower() or keyword.lower() in email["body"].lower():
+                results.append(email)
+        return results    
 
 # Script de demonstração
 if __name__ == "__main__":
